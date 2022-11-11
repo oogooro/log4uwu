@@ -1,0 +1,29 @@
+{
+  "name": "log4uwu",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node test.ts"
+  },
+  "author": "oogooro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oogooro/log4uwu"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}
