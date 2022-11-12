@@ -2,12 +2,12 @@ import fs from 'node:fs';
 import chalk from 'chalk';
 import moment from 'moment';
 
-interface LoggerOptions {
+export interface LoggerOptions {
     transports: string[];
     debugMode?: boolean;
 }
 
-interface LogOptions {
+export interface LogOptions {
     message: string,
     level: 
         | 'info'
