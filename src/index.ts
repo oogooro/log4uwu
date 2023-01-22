@@ -1,46 +1,29 @@
 import fs from 'node:fs';
-import chalk from 'chalk';
+import chalk, { Color } from 'chalk';
 import moment from 'moment';
+import { Socket } from 'socket.io';
 
 export interface LoggerOptions {
-    transports: string[];
+    transports: Array<string | Socket>;
     debugMode?: boolean;
 }
 
 export interface LogOptions {
     message: string,
-    level: 
-        | 'info'
-        | 'init'
-        | 'debug'
-        | 'error'
-        | 'warn'
-        | 'thread';
-    color?:
-        | 'black'
-        | 'red'
-        | 'green'
-        | 'yellow'
-        | 'blue'
-        | 'magenta'
-        | 'cyan'
-        | 'white'
-        | 'gray'
-        | 'grey'
-        | 'blackBright'
-        | 'redBright'
-        | 'greenBright'
-        | 'yellowBright'
-        | 'blueBright'
-        | 'magentaBright'
-        | 'cyanBright'
-        | 'whiteBright';
+    level:
+    | 'info'
+    | 'init'
+    | 'debug'
+    | 'error'
+    | 'warn'
+    | 'thread';
+    color?: typeof Color
     silent?: boolean;
     thread?: LoggerThread;
 }
 
 export default class Logger {
-    public transports: string[] = [];
+    public transports: Array<string | Socket> = [];
     public threads: Map<string, LoggerThread> = new Map();
     public debugMode: boolean = false;
 
@@ -48,9 +31,7 @@ export default class Logger {
         this.transports = options.transports;
         this.debugMode = options.debugMode;
         for (const transport of this.transports)
-            if (fs.existsSync(transport)) {
-                fs.rmSync(transport);
-            }
+            if (typeof transport === 'string' && fs.existsSync(transport)) fs.rmSync(transport);
     }
 
     log({ level, message, color, silent, thread, }: LogOptions): string {
@@ -66,10 +47,13 @@ export default class Logger {
             if (chalk[color]) process.stdout.write(`${prefix} ${chalk[color](message)}\n`);
             else process.stdout.write(`${prefix} ${message}\n`);
         }
-        
+
         const writeMessageString = `[${moment(new Date()).format('HH:mm:ss')}] - ${level.toUpperCase()} - ${message}\n`;
 
-        for (const transport of this.transports) fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
+        for (const transport of this.transports) {
+            if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
+            else if (transport.connected) transport.emit('logger', writeMessageString);
+        }
 
         return message;
     }
@@ -126,7 +110,7 @@ export class LoggerThread {
 
     log({ level, message, color, silent, }: LogOptions): string {
         let prefix = '';
-        if (level == 'info')        prefix = `[${chalk.greenBright('INFO')}]`;
+        if      (level == 'info')   prefix = `[${chalk.greenBright('INFO')}]`;
         else if (level == 'init')   prefix = `[${chalk.whiteBright('INIT')}]`;
         else if (level == 'debug')  prefix = `[${chalk.cyanBright('DEBUG')}]`;
         else if (level == 'error')  prefix = `[${chalk.redBright('ERROR')}]`;
@@ -142,7 +126,10 @@ export class LoggerThread {
 
         const writeMessageString = `[${moment(new Date()).format('HH:mm:ss')}] - ${level.toUpperCase()} - ${this.id} - ${message}\n`;
 
-        for (const transport of this.logger.transports) fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
+        for (const transport of this.logger.transports) {
+            if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
+            else if (transport.connected) transport.emit('logger', writeMessageString);
+        }
 
         return message;
     }

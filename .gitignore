@@ -3,3 +3,4 @@ logs
 .vscode
 test.ts
 lib
+index.html
