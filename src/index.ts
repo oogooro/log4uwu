@@ -31,7 +31,11 @@ export default class Logger {
         this.transports = options.transports;
         this.debugMode = options.debugMode;
         for (const transport of this.transports)
-            if (typeof transport === 'string' && fs.existsSync(transport)) fs.rmSync(transport);
+            if (typeof transport === 'string') {
+                const dir = transport.split('/').slice(0, -1).join('/');
+                if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+                if (fs.existsSync(transport)) fs.rmSync(transport);
+            }
     }
 
     log({ level, message, color, silent, thread, }: LogOptions): string {
