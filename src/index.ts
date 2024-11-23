@@ -52,7 +52,7 @@ export default class Logger {
             else process.stdout.write(`${prefix} ${message}\n`);
         }
 
-        const writeMessageString = `[${moment(new Date()).format('HH:mm:ss')}] - ${level.toUpperCase()} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') }\n`;
+        const writeMessageString = `[${moment(new Date()).format('DD-MM-YY HH:mm:ss')}] - ${level.toUpperCase()} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') }\n`;
 
         for (const transport of this.transports) {
             if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
@@ -128,7 +128,7 @@ export class LoggerThread {
             else process.stdout.write(`${prefix} ${message}\n`);
         }
 
-        const writeMessageString = `[${moment(new Date()).format('HH:mm:ss')}] - ${level.toUpperCase()} - ${this.id} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}\n`;
+        const writeMessageString = `[${moment(new Date()).format('DD-MM-YY HH:mm:ss')}] - ${level.toUpperCase()} - ${this.id} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}\n`;
 
         for (const transport of this.logger.transports) {
             if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
