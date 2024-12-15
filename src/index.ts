@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Socket } from 'socket.io';
 
 export interface LoggerOptions {
-    transports: Array<string | Socket>;
+    transports?: Array<string | Socket>;
     debugMode?: boolean;
 }
 
@@ -32,12 +32,13 @@ export class Logger {
     constructor(options: LoggerOptions) {
         this.transports = options.transports;
         this.debugMode = options.debugMode;
-        for (const transport of this.transports)
-            if (typeof transport === 'string') {
-                const dir = transport.split('/').slice(0, -1).join('/');
-                if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-                if (fs.existsSync(transport)) fs.rmSync(transport);
-            }
+        if (this.transports?.length)
+            for (const transport of this.transports)
+                if (typeof transport === 'string') {
+                    const dir = transport.split('/').slice(0, -1).join('/');
+                    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+                    if (fs.existsSync(transport)) fs.rmSync(transport);
+                }
     }
 
     log({ level, message, color, silent, thread, }: LogOptions): string {
@@ -54,11 +55,13 @@ export class Logger {
             else process.stdout.write(`${prefix} ${message}\n`);
         }
 
-        const writeMessageString = `[${moment(new Date()).format('DD-MM-YY HH:mm:ss')}] - ${level.toUpperCase()} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') }\n`;
-
-        for (const transport of this.transports) {
-            if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
-            else if (transport.connected) transport.emit('logger', writeMessageString);
+        if (this.transports?.length) {
+            const writeMessageString = `[${moment(new Date()).format('DD-MM-YY HH:mm:ss')}] - ${level.toUpperCase()} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') }\n`;
+    
+            for (const transport of this.transports) {
+                if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
+                else if (transport.connected) transport.emit('logger', writeMessageString);
+            }
         }
 
         return message;
@@ -130,11 +133,13 @@ export class LoggerThread {
             else process.stdout.write(`${prefix} ${message}\n`);
         }
 
-        const writeMessageString = `[${moment(new Date()).format('DD-MM-YY HH:mm:ss')}] - ${level.toUpperCase()} - ${this.id} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}\n`;
-
-        for (const transport of this.logger.transports) {
-            if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
-            else if (transport.connected) transport.emit('logger', writeMessageString);
+        if (this.logger.transports?.length) {
+            const writeMessageString = `[${moment(new Date()).format('DD-MM-YY HH:mm:ss')}] - ${level.toUpperCase()} - ${this.id} - ${message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}\n`;
+    
+            for (const transport of this.logger.transports) {
+                if (typeof transport === 'string') fs.writeFileSync(transport, writeMessageString, { flag: 'as', });
+                else if (transport.connected) transport.emit('logger', writeMessageString);
+            }
         }
 
         return message;
