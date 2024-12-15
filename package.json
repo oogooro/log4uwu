@@ -12,7 +12,7 @@
   "author": "oogooro",
   "repository": {
     "type": "git",
-    "url": "https://github.com/oogooro/log4uwu"
+    "url": "git+https://github.com/oogooro/log4uwu"
   },
   "license": "MIT",
   "dependencies": {
@@ -21,8 +21,8 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "@types/node": "^22.9.3",
-    "express": "^4.21.1",
+    "@types/node": "^22.10.2",
+    "express": "^4.21.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },

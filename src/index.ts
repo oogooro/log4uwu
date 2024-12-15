@@ -8,21 +8,23 @@ export interface LoggerOptions {
     debugMode?: boolean;
 }
 
-export interface LogOptions {
-    message: string,
-    level:
+export type LogLevel =
     | 'info'
     | 'init'
     | 'debug'
     | 'error'
     | 'warn'
     | 'thread';
+
+export interface LogOptions {
+    message: string,
+    level: LogLevel
     color?: typeof Color
     silent?: boolean;
     thread?: LoggerThread;
 }
 
-export default class Logger {
+export class Logger {
     public transports: Array<string | Socket> = [];
     public threads: Map<string, LoggerThread> = new Map();
     public debugMode: boolean = false;
