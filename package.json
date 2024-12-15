@@ -12,7 +12,7 @@
   "author": "oogooro",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oogooro/log4uwu"
+    "url": "git+https://github.com/oogooro/log4uwu.git"
   },
   "license": "MIT",
   "dependencies": {
