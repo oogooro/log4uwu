@@ -3,13 +3,15 @@ import { LogOptions } from '../types/loggerOptions';
 import { BaseTransport } from './baseTransport';
 import fs from 'node:fs';
 import { Writable } from 'node:stream';
-import moment from 'moment';
 import stripAnsi from 'strip-ansi';
 import { FileTransportOptions } from '../types/fileTransport';
+import { formatDate } from '../utils';
 
 export class FileTransport extends BaseTransport {
     private writeStream: Writable;
-    
+    private queue: string[] = [];
+    private writing: boolean = false;
+
     constructor(filePath: string, options?: FileTransportOptions) {
         super();
 
@@ -29,6 +31,27 @@ export class FileTransport extends BaseTransport {
 
     public override logData(options: LogOptions): void {
         const { level, message } = options;
-        this.writeStream.write(`[${moment(new Date()).format('DD-MM-YY HH:mm:ss')}] - ${level.toUpperCase()} - ${stripAnsi(message)}\n`);
+        this.queue.push(`[${formatDate(new Date())}] - ${level.toUpperCase()} - ${stripAnsi(message)}\n`);
+        this.flush();
+    }
+
+    private flush(): void {
+        if (this.writing) return;
+        this.writing = true;
+
+        while (this.queue.length) {
+            const chunk = this.queue.shift()!;
+            const ok = this.writeStream.write(chunk);
+
+            if (!ok) {
+                this.writeStream.once('drain', () => {
+                    this.writing = false;
+                    this.flush();
+                });
+                return;
+            }
+        }
+
+        this.writing = false;
     }
 };
