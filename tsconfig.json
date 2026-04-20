@@ -1,12 +1,16 @@
 {
     "compilerOptions": {
-        "target": "ES2022",
+        "types": [
+            "node",
+        ],
+        "target": "ES2025",
         "module": "CommonJS",
         "outDir": "lib",
+        "rootDir": "src/",
         "sourceMap": false,
         "esModuleInterop": true,
-        "resolveJsonModule": true,
         "declaration": true,
+        "strict": true
     },
     "include": [
         "src/**/*",
