@@ -3,6 +3,7 @@ import { LogOptions } from '../types/loggerOptions';
 
 export abstract class BaseTransport {
     protected formatterPipeline: Formatter[] = [];
+    public logLevel: number = 0;
     public abstract logData(logData: LogOptions): void;
     
     public format(formatter: Formatter): this {
@@ -15,5 +16,10 @@ export abstract class BaseTransport {
             logData = formatter(logData);
         }
         return logData;
+    }
+
+    public level(level: number): this {
+        this.logLevel = level;
+        return this;
     }
 };

@@ -5,7 +5,7 @@ import { BaseTransport } from './baseTransport';
 export class StreamTransport extends BaseTransport {
     private stream: Writable;
     
-    constructor (stream: Writable) {
+    constructor(stream: Writable) {
         super();
         this.stream = stream;
     }

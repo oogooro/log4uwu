@@ -12,6 +12,7 @@ import { levelColorFormat } from './formatters/levelColor';
 import { stripAnsiFormat } from './formatters/stripansi';
 import { colorizeFormat } from './formatters/colorize';
 import { jsonFormat } from './formatters/json';
+import { logLevelPriorities } from './logLevel';
 
 export {
     Logger,
@@ -28,4 +29,5 @@ export {
     stripAnsiFormat,
     colorizeFormat,
     jsonFormat,
+    logLevelPriorities,
 };

@@ -3,6 +3,7 @@ import { BaseTransport } from './transports/baseTransport';
 import { LoggerThread } from './loggerThread';
 import { BaseLogger } from './types/logger';
 import figlet from 'figlet';
+import { logLevelPriorities } from './logLevel';
 
 export class Logger implements BaseLogger {
     private transports: BaseTransport[];
@@ -28,8 +29,10 @@ export class Logger implements BaseLogger {
 
     public log(logData: LogOptions): void {
         for (const transport of this.transports) {
-            const logDataCopy = { ...logData };
-            transport.logData(logDataCopy);
+            if (transport.logLevel <= logLevelPriorities[logData.level]) {
+                const logDataCopy = { ...logData };
+                transport.logData(logDataCopy);
+            }
         }
     }
 
