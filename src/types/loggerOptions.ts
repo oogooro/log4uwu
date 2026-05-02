@@ -14,4 +14,5 @@ export interface LogOptions {
     level: LogLevel;
     message: string;
     color?: ColorName;
+    threadId?: string;
 };

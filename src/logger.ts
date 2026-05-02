@@ -50,7 +50,7 @@ export class Logger implements BaseLogger {
     }
 
     public startThread(): LoggerThread {
-        const thread = new LoggerThread(this, this.threadCounter);
+        const thread = new LoggerThread(this, `0x${this.threadCounter.toString(16)}`);
         this.threadCounter++;
         return thread;
     }

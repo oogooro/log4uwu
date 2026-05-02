@@ -8,10 +8,10 @@ import { FileTransportOptions } from './types/fileTransport';
 import { StreamTransport } from './transports/streamTransport';
 import { timestampFormat } from './formatters/timestamp';
 import { levelFormat } from './formatters/level';
-import { levelColorFormat } from './formatters/levelColor';
 import { stripAnsiFormat } from './formatters/stripansi';
 import { colorizeFormat } from './formatters/colorize';
 import { jsonFormat } from './formatters/json';
+import { threadFormat } from './formatters/thread';
 import { logLevelPriorities } from './logLevel';
 
 export {
@@ -25,9 +25,9 @@ export {
     StreamTransport,
     timestampFormat,
     levelFormat,
-    levelColorFormat,
     stripAnsiFormat,
     colorizeFormat,
     jsonFormat,
+    threadFormat,
     logLevelPriorities,
 };
