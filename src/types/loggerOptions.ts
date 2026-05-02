@@ -6,7 +6,6 @@ export interface LoggerOptions {
     transports: BaseTransport[];
     formatters?: Formatter[];
     bannerText?: string; 
-    verboseDebug?: boolean;
 };
 
 export type LogLevel = 'init' | 'info' | 'warn' | 'error' | 'debug';

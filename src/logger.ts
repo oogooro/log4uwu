@@ -8,11 +8,9 @@ import { logLevelPriorities } from './logLevel';
 export class Logger implements BaseLogger {
     private transports: BaseTransport[];
     private threadCounter = 0;
-    public verboseDebug: boolean;
 
     constructor(options: LoggerOptions) {
         this.transports = options.transports;
-        this.verboseDebug = options.verboseDebug ?? false;
 
         if (options.bannerText) {
             console.log(figlet.textSync(options.bannerText));
